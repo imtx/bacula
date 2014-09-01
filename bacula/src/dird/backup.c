@@ -589,6 +589,12 @@ bool do_backup(JCR *jcr)
    }
 
    if (!jcr->is_canceled() && stat == JS_Terminated) {
+      if (jcr->JobErrors && !jcr->job->IgnoreNonFatalFDErrors) {
+         Jmsg(jcr, M_WARNING, 0, _("Backup is not OK because of non-fatal FD errors\n"));
+         jcr->setJobStatus(JS_ErrorTerminated);
+         return false;
+      }
+
       backup_cleanup(jcr, stat);
       return true;
    }

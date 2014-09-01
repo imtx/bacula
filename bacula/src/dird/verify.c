@@ -374,6 +374,15 @@ bool do_verify(JCR *jcr)
    }
 
    stat = wait_for_job_termination(jcr);
+
+   if (!jcr->is_canceled() && (stat == JS_Terminated || stat == JS_Differences) &&
+         jcr->JobErrors && !jcr->job->IgnoreNonFatalFDErrors) {
+      Jmsg(jcr, M_WARNING, 0, _("Verify is not OK because of non-fatal FD errors\n"));
+      jcr->setJobStatus(JS_ErrorTerminated);
+      verify_cleanup(jcr, JS_ErrorTerminated);
+      return false;
+   }
+
    verify_cleanup(jcr, stat);
    return true;
 

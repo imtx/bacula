@@ -539,6 +539,18 @@ bool do_restore(JCR *jcr)
 
    /* Wait for Job Termination */
    stat = wait_for_job_termination(jcr);
+
+   if (!jcr->is_canceled() && stat == JS_Terminated) {
+      if (jcr->JobErrors && !jcr->job->IgnoreNonFatalFDErrors) {
+         Jmsg(jcr, M_WARNING, 0, _("Restore is not OK because of non-fatal FD errors\n"));
+         jcr->setJobStatus(JS_ErrorTerminated);
+         goto bail_out;
+      }
+
+      backup_cleanup(jcr, stat);
+      return true;
+   }
+
    restore_cleanup(jcr, stat);
    return true;
 

@@ -338,6 +338,7 @@ RES_ITEM job_items[] = {
    {"cancelrunningduplicates", store_bool, ITEM(res_job.CancelRunningDuplicates), 0, ITEM_DEFAULT, false},
    {"pluginoptions", store_str, ITEM(res_job.PluginOptions), 0, 0, 0},
    {"base", store_alist_res, ITEM(res_job.base),  R_JOB, 0, 0},
+   {"ignorenonfatalfderrors", store_bool, ITEM(res_job.IgnoreNonFatalFDErrors), 0, ITEM_DEFAULT, true},
    {NULL, NULL, {0}, 0, 0, 0}
 };
 
